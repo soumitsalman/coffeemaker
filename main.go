@@ -20,10 +20,15 @@ func main() {
 	case "DEBUG":
 		RunDebug()
 	case "INDEXER":
-		RunIndexer()
+		StartIndexer()
+		// this is not a blocking call so wait for jobs
+		select {}
 	case "DUAL":
-		RunIndexer()
+		StartIndexer()
+		// this is blocking call so this should always be sequenced after the indexer starts
+		// no need to use select {} after indexer since the thread will be blocked on RunCDN
 		RunCDN()
 	}
-	select {} // wait for jobs
+	log.Println("[coffeemaker] shutting down")
+
 }

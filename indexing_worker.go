@@ -48,7 +48,7 @@ import (
 
 const _SITEMAPS_PATH = "./sitemaps.csv"
 
-func RunIndexer() {
+func StartIndexer() {
 	c := cron.New()
 
 	save_to_beansack := func(beans []sdk.Bean) { sdk.AddBeans(beans) }
@@ -59,15 +59,16 @@ func RunIndexer() {
 
 	// run collection
 	c.AddFunc(getCollectionSchedule(), func() {
-		log.Println("[INDEXER] Running collectors")
+		log.Println("[INDEXER] Running news collector")
 		nc.Collect()
+		log.Println("[INDEXER] Running reddit collector")
 		rc.Collect()
 	})
 
 	// run clean up
 	c.AddFunc(getCleanupSchedule(), func() {
 		log.Println("[INDEXER] Running Cleanup")
-		sdk.Cleanup(7)
+		sdk.Cleanup(30)
 	})
 
 	c.Start()
