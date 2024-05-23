@@ -7,8 +7,8 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/robfig/cron v1.2.0
 	github.com/soumitsalman/data-utils v0.0.0-20240411181743-1067a6fce2ca
-	github.com/soumitsalman/go-reddit v0.1.2
-	github.com/soumitsalman/newscollector v0.1.1
+	github.com/soumitsalman/go-reddit v0.1.3
+	github.com/soumitsalman/newscollector v0.1.2
 )
 
 require (
@@ -55,7 +55,6 @@ require (
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/soumitsalman/document-loader v0.0.0-20240313203526-22ee6a30b55a // indirect
 	github.com/soumitsalman/media-content-service v0.0.0-20240222180410-3ecbd3432f4e // indirect
 	github.com/spf13/cast v1.6.0 // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
@@ -97,7 +96,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
-	github.com/soumitsalman/beansack v0.0.1
+	github.com/soumitsalman/beansack v0.0.2
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.8.0 // indirect

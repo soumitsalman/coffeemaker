@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  cdn:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" 
+    environment:
+      - INSTANCE_MODE=CDN
+
+  indexer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - INSTANCE_MODE=INDEXER
+      - COLLECTION_SCHEDULE="0 0 */12 * * *" # runs every 12 hours
+      - CLEANUP_SCHEDULE="0 0 0 * * 0" # runs once a week on sunday

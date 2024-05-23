@@ -9,60 +9,28 @@ import (
 	news "github.com/soumitsalman/newscollector/collector"
 )
 
-// func newBeansHandler(ctx *gin.Context) {
-// 	var beans []sdk.Bean
-// 	if ctx.BindJSON(&beans) != nil {
-// 		ctx.String(http.StatusBadRequest, _ERROR_MESSAGE)
-// 	} else {
-// 		sdk.AddBeans(beans)
-// 		ctx.String(http.StatusOK, _SUCCESS_MESSAGE)
-// 	}
-// }
-
-// func serverAuthHandler(ctx *gin.Context) {
-// 	// log.Println(ctx.GetHeader("X-API-Key"), getInternalAuthToken())
-// 	if ctx.GetHeader("X-API-Key") == getInternalAuthToken() {
-// 		ctx.Next()
-// 	} else {
-// 		ctx.AbortWithStatus(http.StatusUnauthorized)
-// 	}
-// }
-
-// // func rectifyHandler(ctx *gin.Context) {
-// // 	go sdk.Rectify()
-// // 	ctx.String(http.StatusOK, _SUCCESS_MESSAGE)
-// // }
-
-// func newIndexer() *gin.Engine {
-// 	router := gin.Default()
-
-// 	// SERVICE TO SERVICE AUTH
-// 	auth_group := router.Group("/")
-// 	auth_group.Use(initializeRateLimiter(), serverAuthHandler)
-// 	// PUT /beans
-// 	auth_group.PUT("/beans", newBeansHandler)
-// 	auth_group.POST("/rectify", rectifyHandler)
-
-// 	return router
-// }
-
 const _SITEMAPS_PATH = "./sitemaps.csv"
 
 func StartIndexer() {
 	c := cron.New()
 
-	save_to_beansack := func(beans []sdk.Bean) { sdk.AddBeans(beans) }
-
 	// initialize collectors
-	nc := news.NewCollector(_SITEMAPS_PATH, save_to_beansack)
-	rc := reddit.NewCollector(reddit.NewCollectorConfig(save_to_beansack))
+	nc := news.NewCollector(_SITEMAPS_PATH, sdk.AddBeans)
+	rc := reddit.NewCollector(reddit.NewCollectorConfig(sdk.AddBeans))
 
+	// the channel is to keep collection synchronization
+	// if a collection session is already in progress, then the next collection instruction will wait until this session is finished
+	coll_session := make(chan bool, 1)
 	// run collection
 	c.AddFunc(getCollectionSchedule(), func() {
+		// start collection session
+		coll_session <- true
 		log.Println("[INDEXER] Running news collector")
 		nc.Collect()
 		log.Println("[INDEXER] Running reddit collector")
 		rc.Collect()
+		// finish collection session so that the next session can continue
+		<-coll_session
 	})
 
 	// run clean up

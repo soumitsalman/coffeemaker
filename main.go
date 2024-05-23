@@ -16,18 +16,23 @@ func main() {
 
 	switch getInstanceMode() {
 	case "CDN":
+		log.Println("Running in CDN Mode.")
 		RunCDN()
-	case "DEBUG":
-		RunDebug()
 	case "INDEXER":
+		log.Println("Running in Indexer Mode.")
 		StartIndexer()
 		// this is not a blocking call so wait for jobs
 		select {}
 	case "DUAL":
+		log.Println("Running in Dual Mode.")
 		StartIndexer()
 		// this is blocking call so this should always be sequenced after the indexer starts
 		// no need to use select {} after indexer since the thread will be blocked on RunCDN
 		RunCDN()
+	case "DEBUG":
+		RunDebug()
+	default:
+		log.Println("WTF is this?!")
 	}
 	log.Println("[coffeemaker] shutting down")
 
