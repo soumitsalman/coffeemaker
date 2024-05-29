@@ -48,9 +48,8 @@ func extractParams(ctx *gin.Context) (*sdk.SearchOptions, []string) {
 	var body_params bodyParams
 	// if body params are provided, assign them or else proceed without them
 	if ctx.ShouldBindJSON(&body_params) == nil {
-
-		options.CategoryTexts = body_params.Categories
-		options.CategoryEmbeddings = body_params.Embeddings
+		options.SearchTexts = body_params.Categories
+		options.SearchEmbeddings = body_params.Embeddings
 		options.Context = body_params.Context
 	}
 	return options, body_params.Nuggets

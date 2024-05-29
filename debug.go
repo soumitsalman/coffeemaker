@@ -2,14 +2,15 @@ package main
 
 import (
 	"encoding/json"
-	"time"
+	// "time"
 
 	// "fmt"
 	"log"
 	"os"
 
 	"github.com/soumitsalman/beansack/sdk"
-	datautils "github.com/soumitsalman/data-utils"
+	// datautils "github.com/soumitsalman/data-utils"
+	news "github.com/soumitsalman/newscollector/collector"
 )
 
 func loadFromFile(filepath string) []sdk.Bean {
@@ -24,6 +25,10 @@ func loadFromFile(filepath string) []sdk.Bean {
 }
 
 func RunDebug() {
+
+	nc := news.NewCollector(_SITEMAPS_PATH, sdk.AddBeans)
+	nc.Collect()
+
 	// initialize the services
 	// if err := sdk.InitializeBeanSack(getDBConnectionString(), getLLMServiceAPIKey()); err != nil {
 	// 	log.Fatalln("initialization not working", err)
@@ -43,38 +48,15 @@ func RunDebug() {
 	// res := sdk.TextSearch([]string{"Sergei Shoigu", "Being removed as defence minister"})
 	// datautils.ForEach(res, func(item *sdk.Bean) { log.Printf("%f | %s\n", item.SearchScore, item.Title) })
 
-	// test add beans
-	// path := "news-dump/2024-03-21-12-52-24.json"
-	// beans := loadFromFile(path)
-	// texts := datautils.Transform(beans, func(bean *sdk.Bean) string { return bean.Text })
-	// sdk.AddBeans(beans)
+	// // trending nuggets
+	// nuggets := sdk.TrendingNuggets(sdk.NewSearchOptions().WithTimeWindow(2))
+	// datautils.ForEach(nuggets, func(item *sdk.NewsNugget) { log.Printf("%d | %s: %s\n", item.TrendScore, item.KeyPhrase, item.Event) })
 
-	// test get beans
-	// res := sdk.GetBeans(sdk.WithTrendingFilter(2), sdk.WithTimeWindowFilter(2))
-	// fmt.Println(len(res))
-	// for _, v := range res {
-	// 	fmt.Println(v.SimilarityScore, time.Unix(v.Updated, 0).Format(time.DateTime), v.Url)
-	// }
-
-	// keywords := sdk.GetTrendingKeywords(2)
-	// datautils.ForEach(keywords, func(item *sdk.KeywordMap) {
-	// 	fmt.Println(item.Keyword, item.Count)
+	// // nugget search
+	// beans := sdk.NuggetSearch([]string{"Cinterion cellular modems"}, sdk.NewSearchOptions().WithTimeWindow(2))
+	// datautils.ForEach(beans, func(item *sdk.Bean) {
+	// 	log.Printf("[%s] %s | %s\n", item.Source, time.Unix(item.Updated, 0).Format(time.DateTime), item.Title)
 	// })
-
-	// top_beans := sdk.GetTrendingBeans(2)
-	// datautils.ForEach(top_beans, func(v *sdk.Bean) {
-	// 	fmt.Println(time.Unix(v.Updated, 0).Format(time.DateTime), v.Title)
-	// })
-
-	// trending nuggets
-	nuggets := sdk.TrendingNuggets(sdk.NewSearchOptions().WithTimeWindow(2))
-	datautils.ForEach(nuggets, func(item *sdk.NewsNugget) { log.Printf("%d | %s: %s\n", item.TrendScore, item.KeyPhrase, item.Event) })
-
-	// nugget search
-	beans := sdk.NuggetSearch([]string{"Cinterion cellular modems"}, sdk.NewSearchOptions().WithTimeWindow(2))
-	datautils.ForEach(beans, func(item *sdk.Bean) {
-		log.Printf("[%s] %s | %s\n", item.Source, time.Unix(item.Updated, 0).Format(time.DateTime), item.Title)
-	})
 
 }
 
