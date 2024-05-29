@@ -6,9 +6,9 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/joho/godotenv v1.5.1
 	github.com/robfig/cron v1.2.0
-	github.com/soumitsalman/beansack v0.0.3
-	github.com/soumitsalman/go-reddit v0.1.4
-	github.com/soumitsalman/newscollector v0.1.3
+	github.com/soumitsalman/beansack v0.0.4
+	github.com/soumitsalman/go-reddit v0.1.7
+	github.com/soumitsalman/newscollector v0.1.4
 )
 
 require (
