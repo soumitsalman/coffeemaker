@@ -10,7 +10,6 @@ import (
 
 	"github.com/soumitsalman/beansack/sdk"
 	// datautils "github.com/soumitsalman/data-utils"
-	news "github.com/soumitsalman/newscollector/collector"
 )
 
 func loadFromFile(filepath string) []sdk.Bean {
@@ -26,8 +25,8 @@ func loadFromFile(filepath string) []sdk.Bean {
 
 func RunDebug() {
 
-	nc := news.NewCollector(_SITEMAPS_PATH, sdk.AddBeans)
-	nc.Collect()
+	// nc := news.NewCollector(_SITEMAPS_PATH, sdk.AddBeans)
+	// nc.Collect()
 
 	// initialize the services
 	// if err := sdk.InitializeBeanSack(getDBConnectionString(), getLLMServiceAPIKey()); err != nil {
@@ -37,8 +36,7 @@ func RunDebug() {
 	// fmt.Println(len(sdk.GetBeans(sdk.WithKindFilter([]string{"article"}))))
 
 	// run rectify
-	// sdk.Rectify()
-	// sdk.RemapNewsNuggets()
+	sdk.Rectify()
 
 	// test vector search
 	// res := sdk.CategorySearch([]string{"Russia's longest-serving minister, has been removed as defence minister by President Vladimir Putin"})

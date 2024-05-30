@@ -33,6 +33,12 @@ func StartIndexer() {
 		<-coll_session
 	})
 
+	// run rectification
+	c.AddFunc(getRectifySchedule(), func() {
+		log.Println("[INDEXER] Running Rectification")
+		sdk.Rectify()
+	})
+
 	// run clean up
 	c.AddFunc(getCleanupSchedule(), func() {
 		log.Println("[INDEXER] Running Cleanup")

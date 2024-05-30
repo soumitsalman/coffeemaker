@@ -24,6 +24,7 @@ type bodyParams struct {
 	Categories []string    `json:"categories,omitempty"`
 	Embeddings [][]float32 `json:"embeddings,omitempty"`
 	Context    string      `json:"context,omitempty"`
+	URLs       []string    `json:"urls,omitempty"`
 }
 
 func extractParams(ctx *gin.Context) (*sdk.SearchOptions, []string) {
@@ -51,6 +52,7 @@ func extractParams(ctx *gin.Context) (*sdk.SearchOptions, []string) {
 		options.SearchTexts = body_params.Categories
 		options.SearchEmbeddings = body_params.Embeddings
 		options.Context = body_params.Context
+		options.WithURLs(body_params.URLs)
 	}
 	return options, body_params.Nuggets
 }
@@ -76,6 +78,14 @@ func trendingBeansHandler(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, sdk.TrendingBeans(options))
+}
+
+func retrieveBeansHandler(ctx *gin.Context) {
+	options, _ := extractParams(ctx)
+	if options == nil {
+		return
+	}
+	ctx.JSON(http.StatusOK, sdk.Retrieve(options))
 }
 
 func trendingNuggetsHandler(ctx *gin.Context) {
@@ -111,7 +121,9 @@ func newCDNServer() *gin.Engine {
 	// NO NEED FOR AUTH: this is open to public
 	open_group := router.Group("/")
 	open_group.Use(initializeRateLimiter())
-	// GET /beans/trending?window=1&keyword=amazon&keyword=apple
+	// GET /beans
+	open_group.GET("/beans", retrieveBeansHandler)
+	// GET /beans/trending?window=1
 	open_group.GET("/beans/trending", trendingBeansHandler)
 	// GET /beans/search?window=1
 	open_group.GET("/beans/search", searchBeansHandler)

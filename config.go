@@ -7,7 +7,7 @@ const (
 	_RATE_TPS   = 2000
 	// second minute hour day month week
 	// this runs once a day
-	_DEFAULT_SCHEDULE = "0 0 0 * * *"
+	_ONCE_A_DAY = "0 0 0 * * *"
 )
 
 func getDBConnectionString() string {
@@ -33,7 +33,15 @@ func getInstanceMode() string {
 func getCollectionSchedule() string {
 	schedule := os.Getenv("COLLECTION_SCHEDULE")
 	if schedule == "" {
-		return _DEFAULT_SCHEDULE
+		return _ONCE_A_DAY
+	}
+	return schedule
+}
+
+func getRectifySchedule() string {
+	schedule := os.Getenv("RECTIFY_SCHEDULE")
+	if schedule == "" {
+		return _ONCE_A_DAY
 	}
 	return schedule
 }
@@ -41,7 +49,7 @@ func getCollectionSchedule() string {
 func getCleanupSchedule() string {
 	schedule := os.Getenv("CLEANUP_SCHEDULE")
 	if schedule == "" {
-		return _DEFAULT_SCHEDULE
+		return _ONCE_A_DAY
 	}
 	return schedule
 }
