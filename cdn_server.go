@@ -134,5 +134,5 @@ func newCDNServer() *gin.Engine {
 }
 
 func RunCDN() {
-	newCDNServer().Run()
+	newCDNServer().Run(getPort())
 }
