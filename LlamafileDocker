@@ -1,0 +1,19 @@
+FROM debian:latest
+
+# install packages
+RUN apt-get update && \
+    apt-get install -y wget
+
+WORKDIR /app
+
+# Download Llamafile
+RUN wget -O /app/llamafile.exe https://github.com/Mozilla-Ocho/llamafile/releases/download/0.8.6/llamafile-0.8.6 && \
+chmod +x /app/llamafile.exe
+
+# Download the Hugging Face model
+RUN wget -O /app/nomic.gguf https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.Q8_0.gguf
+
+ENV PORT 8080
+EXPOSE ${PORT}
+CMD sh -c /app/llamafile.exe -m /app/nomic.gguf -c 0 --server --nobrowser --embedding --host 0.0.0.0 --port ${PORT}
+

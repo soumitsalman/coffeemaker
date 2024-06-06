@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  indexer:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - embedder
+    environment:
+      - INSTANCE_MODE=INDEXER
+      - SITEMAPS_FILE=./sitemaps.csv
+      - COLLECTION_SCHEDULE="0 * * * * *"
+      - CLEANUP_SCHEDULE="0 0 0 * * 0"
+      - EMBEDDER_URL=http://embedder:8080
+      - EMBEDDER_CTX=2040
+    env_file:
+      - secrets.env
+  
+  embedder:
+    build:
+      context: .
+      dockerfile: LlamafileDocker
+    environment:
+      - PORT=8080
+    expose:
+      - 8080
