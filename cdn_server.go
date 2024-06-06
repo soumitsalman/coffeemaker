@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/soumitsalman/beansack/sdk"
+	sack "github.com/soumitsalman/coffeemaker/sdk/beansack"
 	"golang.org/x/time/rate"
 )
 
@@ -27,8 +27,8 @@ type bodyParams struct {
 	URLs       []string    `json:"urls,omitempty"`
 }
 
-func extractParams(ctx *gin.Context) (*sdk.SearchOptions, []string) {
-	options := sdk.NewSearchOptions()
+func extractParams(ctx *gin.Context) (*sack.SearchOptions, []string) {
+	options := sack.NewSearchOptions()
 
 	var query_params queryParams
 	// if query params are mal-formed return error
@@ -63,11 +63,11 @@ func searchBeansHandler(ctx *gin.Context) {
 		return
 	}
 
-	var res []sdk.Bean
+	var res []sack.Bean
 	if len(nuggets) > 0 {
-		res = sdk.NuggetSearch(nuggets, options)
+		res = sack.NuggetSearch(nuggets, options)
 	} else {
-		res = sdk.FuzzySearch(options)
+		res = sack.FuzzySearch(options)
 	}
 	sendBeans(res, ctx)
 }
@@ -77,7 +77,7 @@ func trendingBeansHandler(ctx *gin.Context) {
 	if options == nil {
 		return
 	}
-	ctx.JSON(http.StatusOK, sdk.TrendingBeans(options))
+	ctx.JSON(http.StatusOK, sack.TrendingBeans(options))
 }
 
 func retrieveBeansHandler(ctx *gin.Context) {
@@ -85,7 +85,7 @@ func retrieveBeansHandler(ctx *gin.Context) {
 	if options == nil {
 		return
 	}
-	ctx.JSON(http.StatusOK, sdk.Retrieve(options))
+	ctx.JSON(http.StatusOK, sack.Retrieve(options))
 }
 
 func trendingNuggetsHandler(ctx *gin.Context) {
@@ -93,7 +93,7 @@ func trendingNuggetsHandler(ctx *gin.Context) {
 	if options == nil {
 		return
 	}
-	ctx.JSON(http.StatusOK, sdk.TrendingNuggets(options))
+	ctx.JSON(http.StatusOK, sack.TrendingNuggets(options))
 }
 
 func initializeRateLimiter() gin.HandlerFunc {
@@ -107,7 +107,7 @@ func initializeRateLimiter() gin.HandlerFunc {
 	}
 }
 
-func sendBeans(res []sdk.Bean, ctx *gin.Context) {
+func sendBeans(res []sack.Bean, ctx *gin.Context) {
 	if len(res) > 0 {
 		ctx.JSON(http.StatusOK, res)
 	} else {

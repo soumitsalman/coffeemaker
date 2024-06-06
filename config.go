@@ -1,6 +1,9 @@
 package main
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 // defaults
 const (
@@ -17,12 +20,20 @@ func getDBConnectionString() string {
 }
 
 func getEmbedderUrl() string {
-	return os.Getenv("EMBEDDER_BASE_URL")
+	return os.Getenv("EMBEDDER_URL")
 }
 
-// func getInternalAuthToken() string {
-// 	return os.Getenv("INTERNAL_AUTH_TOKEN")
-// }
+func getEmbedderCtx() int {
+	num, err := strconv.Atoi(os.Getenv("EMBEDDER_CTX"))
+	if err != nil {
+		return 0
+	}
+	return num
+}
+
+func getSitemaps() string {
+	return os.Getenv("SITEMAPS_FILE")
+}
 
 func getLLMServiceAPIKey() string {
 	return os.Getenv("LLMSERVICE_API_KEY")
@@ -44,14 +55,6 @@ func getPort() string {
 
 func getCollectionSchedule() string {
 	schedule := os.Getenv("COLLECTION_SCHEDULE")
-	if schedule == "" {
-		return _ONCE_A_DAY
-	}
-	return schedule
-}
-
-func getRectifySchedule() string {
-	schedule := os.Getenv("RECTIFY_SCHEDULE")
 	if schedule == "" {
 		return _ONCE_A_DAY
 	}

@@ -8,22 +8,26 @@ import (
 	"log"
 	"os"
 
-	"github.com/soumitsalman/beansack/sdk"
+	"github.com/soumitsalman/coffeemaker/examples"
+	sack "github.com/soumitsalman/coffeemaker/sdk/beansack"
 	// datautils "github.com/soumitsalman/data-utils"
 )
 
-func loadFromFile(filepath string) []sdk.Bean {
+func loadFromFile(filepath string) []sack.Bean {
 	file, err := os.Open(filepath)
 	if err != nil {
 		log.Fatalln(filepath, "not found")
 		return nil
 	}
-	var output []sdk.Bean
+	var output []sack.Bean
 	json.NewDecoder(file).Decode(&output)
 	return output
 }
 
 func RunDebug() {
+	// examples.RedditAndStoreLocally()
+	// examples.ScrapeAndStoreLocally()
+	examples.Nlp()
 
 	// nc := news.NewCollector(_SITEMAPS_PATH, sdk.AddBeans)
 	// nc.Collect()
@@ -36,7 +40,7 @@ func RunDebug() {
 	// fmt.Println(len(sdk.GetBeans(sdk.WithKindFilter([]string{"article"}))))
 
 	// run rectify
-	sdk.Rectify()
+	// sack.Rectify()
 
 	// test vector search
 	// res := sdk.CategorySearch([]string{"Russia's longest-serving minister, has been removed as defence minister by President Vladimir Putin"})

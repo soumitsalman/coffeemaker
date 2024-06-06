@@ -4,13 +4,13 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
-	"github.com/soumitsalman/beansack/sdk"
+	sack "github.com/soumitsalman/coffeemaker/sdk/beansack"
 )
 
 func main() {
 	godotenv.Load()
 
-	if err := sdk.InitializeBeanSack(getDBConnectionString(), getEmbedderUrl(), getLLMServiceAPIKey()); err != nil {
+	if err := sack.InitializeBeanSack(getDBConnectionString(), getEmbedderUrl(), getEmbedderCtx(), getLLMServiceAPIKey()); err != nil {
 		log.Fatalln("Initialization not working", err)
 	}
 
