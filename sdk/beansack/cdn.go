@@ -144,7 +144,7 @@ func getFuzzySearchMode(options *SearchOptions) (int, [][]float32, string, float
 	} else if len(options.SearchTexts) > 0 {
 		// generate embeddings for these categories
 		log.Printf("[beanops] Generating embeddings for %d categories.\n", len(options.SearchTexts))
-		embs = emb_client.CreateBatchTextEmbeddings(options.SearchTexts, nlp.CLASSIFICATION)
+		embs = embedder.CreateBatchTextEmbeddings(options.SearchTexts, nlp.CLASSIFICATION)
 		return _VECTOR, embs, _CLASSIFICATION_EMB, _DEFAULT_CLASSIFICATION_MATCH_SCORE, options.SearchTexts
 	} else if len(options.Context) > 0 {
 		// generate embeddings for the context and search using SEARCH EMBEDDINGS
@@ -152,7 +152,7 @@ func getFuzzySearchMode(options *SearchOptions) (int, [][]float32, string, float
 		// deprecating search_embedddings
 		// embs = [][]float32{emb_client.CreateTextEmbeddings(options.Context, nlp.SEARCH_QUERY)}
 		// return _VECTOR_OR_TEXT, embs, _SEARCH_EMB, _DEFAULT_CONTEXT_MATCH_SCORE, []string{options.Context}
-		embs = [][]float32{emb_client.CreateTextEmbeddings(options.Context, nlp.CLASSIFICATION)}
+		embs = [][]float32{embedder.CreateTextEmbeddings(options.Context, nlp.CLASSIFICATION)}
 		return _VECTOR, embs, _CLASSIFICATION_EMB, _DEFAULT_CONTEXT_MATCH_SCORE, options.SearchTexts
 	} else {
 		log.Println("[beanops] No `vector search` parameter defined.")

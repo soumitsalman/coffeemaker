@@ -104,8 +104,7 @@ func (store *Store[T]) Update(docs []any, filters []JSON) {
 		batch := datautils.SafeSlice(updates, i, i+_UPDATE_BATCH_SIZE)
 		_, err := store.collection.BulkWrite(ctx.Background(), batch)
 		if err != nil {
-			log.Printf("[%s]: Update failed for docs[%d] - docs[%d]. %v\n", store.name, i, i+len(updates), err)
-			log.Println(datautils.ToJsonString(filters[i : i+len(batch)]))
+			log.Printf("[%s]: Update failed for docs[%d] - docs[%d]. %v\n", store.name, i, i+len(batch), err)
 			err_count += _UPDATE_BATCH_SIZE
 		}
 	}

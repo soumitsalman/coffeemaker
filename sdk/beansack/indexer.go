@@ -70,7 +70,7 @@ func AddBeans(beans []Bean) {
 	update_time := time.Now().Unix()
 	beans = datautils.ForEach(beans, func(item *Bean) {
 		item.Updated = update_time
-		item.Text = nlp.TruncateTextOnTokenCount(item.Text)
+		item.Text = nlp.TruncateTextOnTokenCount(item.Text, embedder.Ctx)
 		item.MediaNoise = nil
 	})
 
@@ -91,7 +91,7 @@ func AddBeans(beans []Bean) {
 
 		datautils.ForEach(medianoises, func(item *MediaNoise) {
 			item.Updated = update_time
-			item.Digest = nlp.TruncateTextOnTokenCount(item.Digest)
+			item.Digest = nlp.TruncateTextOnTokenCount(item.Digest, embedder.Ctx)
 			// create the update times for the beans
 			beans_update = append(beans_update, store.JSON{"updated": update_time})
 			beans_ids = append(beans_ids, store.JSON{"url": item.BeanUrl})
@@ -135,15 +135,10 @@ func generateFieldForBeans(beans []Bean, field_name string) {
 	var updates []any
 	switch field_name {
 	case _CLASSIFICATION_EMB:
-		cat_embs := emb_client.CreateBatchTextEmbeddings(texts, nlp.CLASSIFICATION)
+		cat_embs := embedder.CreateBatchTextEmbeddings(texts, nlp.CLASSIFICATION)
 		updates = datautils.Transform(cat_embs, func(emb *[]float32) any {
 			return Bean{CategoryEmbeddings: *emb}
 		})
-	// case _SEARCH_EMB:
-	// 	search_embs := emb_client.CreateBatchTextEmbeddings(texts, nlp.SEARCH_DOCUMENT)
-	// 	updates = datautils.Transform(search_embs, func(emb *[]float32) any {
-	// 		return Bean{SearchEmbeddings: *emb}
-	// 	})
 	case _SUMMARY:
 		// summary and topic. but topic is low priority field and it comes with summary
 		digests := pb_client.ExtractDigests(texts)
@@ -174,7 +169,7 @@ func generateNewsNuggets(beans []Bean) {
 	descriptions := datautils.Transform(nuggets, func(item *BeanNugget) string { return item.Description })
 	// deprecating categorization
 	// embs := emb_client.CreateBatchTextEmbeddings(descriptions, nlp.CATEGORIZATION)
-	embs := emb_client.CreateBatchTextEmbeddings(descriptions, nlp.SEARCH_QUERY)
+	embs := embedder.CreateBatchTextEmbeddings(descriptions, nlp.SEARCH_QUERY)
 	for i := range nuggets {
 		nuggets[i].Embeddings = embs[i]
 	}
@@ -188,7 +183,7 @@ func generateCustomFieldForNuggets(nuggets []BeanNugget) {
 
 	descriptions := datautils.Transform(nuggets, func(item *BeanNugget) string { return item.Description })
 	embs := datautils.Transform(
-		emb_client.CreateBatchTextEmbeddings(descriptions, nlp.CLASSIFICATION),
+		embedder.CreateBatchTextEmbeddings(descriptions, nlp.CLASSIFICATION),
 		func(item *[]float32) any {
 			return BeanNugget{Embeddings: *item}
 		})

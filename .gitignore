@@ -1,3 +1,4 @@
 *.env
 coffeemaker
+coffeemaker.exe
 test*

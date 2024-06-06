@@ -17,7 +17,7 @@ var (
 	beanstore   *store.Store[Bean]
 	nuggetstore *store.Store[BeanNugget]
 	noisestore  *store.Store[MediaNoise]
-	emb_client  *nlp.EmbeddingsDriver
+	embedder    *nlp.EmbeddingsDriver
 	pb_client   *nlp.ParrotboxClient
 )
 
@@ -47,7 +47,7 @@ func InitializeBeanSack(db_conn_str, emb_url string, emb_ctx int, pb_auth_token 
 	}
 
 	pb_client = nlp.NewParrotboxClient(pb_auth_token)
-	emb_client = nlp.NewEmbeddingsDriver(emb_url, emb_ctx)
+	embedder = nlp.NewLlamaFileDriver(emb_url, emb_ctx)
 
 	return nil
 }
